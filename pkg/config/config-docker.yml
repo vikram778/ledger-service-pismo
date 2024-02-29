@@ -1,0 +1,9 @@
+postgres:
+  PostgresqlHost: postgesql
+  PostgresqlPort: 5432
+  PostgresqlUser: postgres
+  PostgresqlPassword: postgres
+  PostgresqlDbname: txn_db
+  PostgresqlSslmode: disable
+  PgDriver: pgx
+
