@@ -52,6 +52,12 @@ func (s *LedgerService) CreateTransaction(ctx context.Context, transaction model
 
 	if transaction.OperationTypeID != 4 {
 		transaction.Amount *= -1
+		transaction.Balance *= -1
+	} else {
+		transaction.Balance, err = s.discharge(ctx, transaction.Amount, transaction.AccountID)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	err = s.DBOps.CreateTransaction(ctx, &transaction)
@@ -60,4 +66,32 @@ func (s *LedgerService) CreateTransaction(ctx context.Context, transaction model
 	}
 
 	return "Success", err
+}
+
+func (s *LedgerService) discharge(ctx context.Context, amount float64, account_id int64) (float64, error) {
+	// Fetching all the negative balance txns for account for discharging
+
+	txns, err := s.DBOps.FetchAllTxnsByAccountId(ctx, account_id)
+	if err != nil {
+		return 0, err
+	}
+
+	for i := range txns {
+		if amount == 0 {
+			break
+		}
+		if amount+txns[i].Balance >= 0 {
+			txns[i].Balance = 0
+			amount += txns[i].Balance
+		} else {
+			txns[i].Balance += amount
+			amount = 0
+		}
+		err = s.DBOps.UpdateBalanceByID(ctx, txns[i].TransactionID, txns[i].Balance)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	return amount, nil
 }

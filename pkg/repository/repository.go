@@ -23,4 +23,6 @@ type DBOps interface {
 	GetAccountByDocument(ctx context.Context, docNo string) (*models.Account, error)
 	GetOperationType(ctx context.Context, id int64) (*models.Operations, error)
 	CreateTransaction(ctx context.Context, txn *models.Transaction) error
+	FetchAllTxnsByAccountId(ctx context.Context, accountID int64) ([]models.Transaction, error)
+	UpdateBalanceByID(ctx context.Context, transaction_id string, balance float64) error
 }

@@ -7,5 +7,6 @@ type Transaction struct {
 	AccountID       int64     `json:"account_id" db:"account_id"`               // AccountID is the account ID on which the transaction is performed for
 	OperationTypeID int64     `json:"operation_type_id" db:"operation_type_id"` // OperationTypeID identifies the type of transaction performed e.g. credit/debit
 	Amount          float64   `json:"amount" db:"amount"`                       // Amount is the amount of transaction is performed
+	Balance         float64   `json:"balance" db:"balance"`                     //Balance keeps the balance in ledger after the discharge
 	EventDate       time.Time `json:"event_date" db:"event_date"`               // EventDate date of transaction performed
 }

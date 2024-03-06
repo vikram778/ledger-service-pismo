@@ -10,7 +10,7 @@ RUN go mod download
 
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o main ./cmd/app
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o main ./cmd
 
 ##### new stage to copy the artifact #####
 
@@ -23,6 +23,6 @@ WORKDIR /pismo
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
-COPY --from=builder /app/config .
+COPY --from=builder /app/pkg/config .
 
 CMD ["./main"]
